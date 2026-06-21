@@ -397,6 +397,22 @@ function ledVolume360 (slide) {
           border-color: rgba(83, 205, 189, .75);
           color: #70ddd2;
         }
+        .cxr-led-stage-slide .interaction-hint {
+          position: absolute;
+          z-index: 4;
+          left: clamp(1rem, 2vw, 1.8rem);
+          bottom: clamp(1rem, 2vw, 1.8rem);
+          display: flex;
+          gap: .85rem;
+          flex-wrap: wrap;
+          color: rgba(244,246,242,.68);
+          font-size: clamp(.68rem, .85vw, .86rem);
+          font-weight: 900;
+          letter-spacing: .08em;
+          text-transform: uppercase;
+          text-shadow: 0 .18rem .75rem rgba(0,0,0,.85);
+          pointer-events: none;
+        }
         @media (max-width: 900px) {
           .cxr-led-stage-slide .view-actions {
             gap: .4rem;
@@ -414,6 +430,10 @@ function ledVolume360 (slide) {
         <button type="button" data-view="left">Driver</button>
         <button type="button" data-view="right">Passenger</button>
         <button type="button" data-view="front">Front</button>
+      </div>
+      <div class="interaction-hint">
+        <span>Click + drag to look around</span>
+        <span>Right click + drag to pan</span>
       </div>
     `
     target.appendChild(root)
@@ -445,7 +465,7 @@ function ledVolume360 (slide) {
     keyLight.castShadow = true
     keyLight.shadow.mapSize.set(1024, 1024)
     scene.add(keyLight)
-    const fillLight = new THREE.PointLight(0x53cdbd, 1.55, 18)
+    const fillLight = new THREE.PointLight(0xffffff, 1.55, 18)
     fillLight.position.set(-5, 3.2, 2)
     scene.add(fillLight)
     const rimLight = new THREE.SpotLight(0xffffff, 4, 12, Math.PI * 0.22, 0.45, 1.2)

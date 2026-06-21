@@ -427,8 +427,8 @@ function ledVolume360 (slide) {
       <canvas></canvas>
       <div class="view-actions">
         <button type="button" data-view="back" class="active">Back</button>
-        <button type="button" data-view="left">Driver</button>
-        <button type="button" data-view="right">Passenger</button>
+        <button type="button" data-view="left">Passenger</button>
+        <button type="button" data-view="right">Driver</button>
         <button type="button" data-view="front">Front</button>
       </div>
       <div class="interaction-hint">
@@ -488,7 +488,7 @@ function ledVolume360 (slide) {
       front: { position: [0, 1.34, 4.4], target: [0, 0.88, 0.1] },
       left: { position: [-3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
       right: { position: [3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
-      back: { position: [0, 1.34, -4.45], target: [0, 0.88, -0.05] }
+      back: { position: [-2.15, 1.34, -4.45], target: [0.18, 0.88, 0.02] }
     }
     let activeView = 'back'
 
@@ -530,17 +530,13 @@ function ledVolume360 (slide) {
       lastY = event.clientY
       if (dragButton === 2) {
         const next = views[activeView]
-        const basePosition = new THREE.Vector3(next.position[0], next.position[1], next.position[2])
-        const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2])
-        const viewDirection = baseTarget.clone().sub(basePosition).normalize()
-        const right = new THREE.Vector3().crossVectors(viewDirection, new THREE.Vector3(0, 1, 0)).normalize()
-        const up = new THREE.Vector3(0, 1, 0)
-        const panScale = 0.0065 * zoom
-        panOffset.addScaledVector(right, -dx * panScale)
-        panOffset.addScaledVector(up, dy * panScale)
-        panOffset.x = clamp(panOffset.x, -2.2, 2.2)
-        panOffset.y = clamp(panOffset.y, -1.1, 1.6)
-        panOffset.z = clamp(panOffset.z, -2.2, 2.2)
+        const target = new THREE.Vector3(next.target[0], next.target[1], next.target[2]).add(panOffset)
+        const viewportHeight = canvas.clientHeight || root.clientHeight || window.innerHeight || 1
+        const distance = camera.position.distanceTo(target) * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5))
+        const right = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 0)
+        const up = new THREE.Vector3().setFromMatrixColumn(camera.matrix, 1)
+        panOffset.addScaledVector(right, -2 * dx * distance / viewportHeight)
+        panOffset.addScaledVector(up, 2 * dy * distance / viewportHeight)
       } else {
         yawOffset -= dx * 0.005
         pitchOffset = clamp(pitchOffset + dy * 0.004, -0.45, 0.45)

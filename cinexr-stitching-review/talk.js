@@ -237,7 +237,12 @@ function createMediaTexture (slide, cleanup) {
 
 function panorama360 (slide) {
   return function renderPanorama360 (target) {
-    const ctx = baseInteractiveSlide(slide, target, { mode: 'pano', fov: 72 })
+    const ctx = baseInteractiveSlide(slide, target, {
+      mode: 'pano',
+      fov: 72,
+      yaw: slide.yaw == null ? 0 : slide.yaw,
+      pitch: slide.pitch == null ? 0 : slide.pitch
+    })
     const sphere = makePanoramaSphere(ctx.texture)
     ctx.scene.add(sphere)
     animate360(ctx, function () {

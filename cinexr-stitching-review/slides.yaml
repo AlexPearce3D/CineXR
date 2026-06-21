@@ -23,6 +23,14 @@ slides:
     transform: translateY(-35vh)
     textAlign: center
 
+- custom: panorama360
+  title: Interactive 360 Viewer
+  subtitle: Click and drag to look around from inside the equirectangular plate.
+  image: ./cinexr/equirect-360.jpg
+  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct_4kh264.mp4
+  yaw: 0
+  pitch: 0
+
 - html: |
     <section class="cxr-source-grid">
       <style>
@@ -164,12 +172,6 @@ slides:
   subtitle: Some stages might prefer this, but probably not recommended. We are providing it for you to see what the top looks like just upwrapped.
   background: ./cinexr/top-unwrapped-360.png
   brightness: 0.42
-
-- custom: panorama360
-  title: Interactive 360 Viewer
-  subtitle: Click and drag to look around from inside the equirectangular plate.
-  image: ./cinexr/equirect-360.jpg
-  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct_4kh264.mp4
 
 - custom: mediaFrame
   image: ./cinexr/title-led-stage.png

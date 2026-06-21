@@ -32,15 +32,6 @@ slides:
   yaw: -1.5708
   pitch: 0
 
-- custom: ledVolume360
-  title: LED Wall Preview
-  subtitle: 360 plate mapped onto a curved virtual stage.
-  image: ./cinexr/equirect-360.jpg
-  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_NoTop_4k_h264.mp4
-  car: ./cinexr/RealisticCar05_HD_LOD0_black_parent_fixed.glb
-  yaw: 0.3
-  pitch: -0.12
-
 - html: |
     <section class="cxr-source-grid">
       <style>

@@ -770,20 +770,12 @@ function normalizeLedCar (model) {
     const materials = Array.isArray(child.material) ? child.material : [child.material]
     materials.forEach(function (material) {
       material.side = THREE.DoubleSide
-      tuneLedCarMaterial(material, child)
       if ('roughness' in material) material.roughness = Math.min(material.roughness || 0.42, 0.36)
       if ('metalness' in material) material.metalness = Math.max(material.metalness || 0.2, 0.35)
       material.needsUpdate = true
     })
   })
   return wrapper
-}
-
-function tuneLedCarMaterial (material, mesh) {
-  if (!material || !material.color) return
-  const label = ((material.name || '') + ' ' + (mesh.name || '')).toLowerCase()
-  if (/glass|window|light|lamp|tire|tyre|rubber|wheel|rim|chrome|interior/.test(label)) return
-  material.color.setHex(0x2a2d30)
 }
 
 function getRenderableBounds (object) {

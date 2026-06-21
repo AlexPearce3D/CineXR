@@ -1,4 +1,5 @@
 import * as THREE from './node_modules/three/build/three.js'
+import { GLTFLoader } from './node_modules/three/examples/jsm/loaders/GLTFLoader.js'
 
 export default {
   renderers: {
@@ -351,24 +352,370 @@ function hotspot360 (slide) {
 
 function ledVolume360 (slide) {
   return function renderLedVolume360 (target) {
-    const ctx = baseInteractiveSlide(slide, target, {
-      cameraZ: slide.cameraZ || 6.2,
-      yaw: slide.yaw == null ? 0.3 : slide.yaw,
-      pitch: slide.pitch == null ? -0.12 : slide.pitch,
-      fov: slide.fov || 52
+    target.innerHTML = ''
+    const root = document.createElement('section')
+    root.className = 'cxr-led-stage-slide'
+    root.innerHTML = `
+      <style>
+        .cxr-led-stage-slide {
+          box-sizing: border-box;
+          position: relative;
+          width: 100vw;
+          height: 100vh;
+          overflow: hidden;
+          background: #07080a;
+          color: #f4f6f2;
+          font-family: Inter, system-ui, sans-serif;
+        }
+        .cxr-led-stage-slide canvas {
+          position: absolute;
+          inset: 0 clamp(18rem, 22vw, 26.5rem) 0 0;
+          width: calc(100% - clamp(18rem, 22vw, 26.5rem));
+          height: 100%;
+          display: block;
+        }
+        .cxr-led-stage-slide .view-actions {
+          position: absolute;
+          z-index: 4;
+          top: clamp(1rem, 2vw, 1.8rem);
+          left: clamp(1rem, 2vw, 1.8rem);
+          display: flex;
+          gap: .55rem;
+        }
+        .cxr-led-stage-slide button {
+          min-height: 2.8rem;
+          border: 1px solid rgba(255,255,255,.1);
+          border-radius: .42rem;
+          background: rgba(28,33,42,.9);
+          color: #f4f6f2;
+          padding: .55rem .78rem;
+          font: 800 .82rem Inter, system-ui, sans-serif;
+          cursor: pointer;
+          box-shadow: 0 .45rem 1.2rem rgba(0,0,0,.22);
+        }
+        .cxr-led-stage-slide button.active {
+          border-color: rgba(83, 205, 189, .75);
+          color: #70ddd2;
+        }
+        .cxr-led-stage-slide .side-panel {
+          position: absolute;
+          z-index: 5;
+          inset: 0 0 0 auto;
+          width: clamp(18rem, 22vw, 26.5rem);
+          box-sizing: border-box;
+          padding: clamp(1.2rem, 2vw, 2rem);
+          background: #171a20;
+          border-left: 1px solid rgba(255,255,255,.08);
+          color: rgba(244,246,242,.7);
+        }
+        .cxr-led-stage-slide .panel-head {
+          display: flex;
+          align-items: start;
+          justify-content: space-between;
+          gap: 1rem;
+        }
+        .cxr-led-stage-slide h1 {
+          margin: 0;
+          color: #f4f6f2;
+          font-size: clamp(1.35rem, 1.6vw, 2rem);
+          line-height: 1.02;
+          letter-spacing: 0;
+        }
+        .cxr-led-stage-slide .panel-head p {
+          margin: .55rem 0 0;
+          max-width: 18rem;
+          font-size: clamp(.82rem, 1vw, 1.02rem);
+          line-height: 1.45;
+        }
+        .cxr-led-stage-slide .pill {
+          flex: 0 0 auto;
+          border-radius: 999px;
+          background: rgba(54, 201, 190, .14);
+          color: #70ddd2;
+          padding: .42rem .9rem;
+          font-size: .76rem;
+          font-weight: 900;
+        }
+        .cxr-led-stage-slide .drop {
+          margin-top: clamp(1.2rem, 2vw, 2rem);
+          border: 1px dashed rgba(183,196,211,.38);
+          border-radius: .5rem;
+          padding: 1.25rem;
+        }
+        .cxr-led-stage-slide .drop strong,
+        .cxr-led-stage-slide .group-title {
+          display: block;
+          color: #f4f6f2;
+          font-size: .9rem;
+          font-weight: 900;
+          letter-spacing: .02em;
+        }
+        .cxr-led-stage-slide .drop span,
+        .cxr-led-stage-slide .asset-meta {
+          display: block;
+          margin-top: .35rem;
+          font-size: .8rem;
+          line-height: 1.35;
+        }
+        .cxr-led-stage-slide .section-title {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: .8rem;
+          margin-top: clamp(1.25rem, 2vw, 1.9rem);
+          color: rgba(244,246,242,.62);
+          font-size: .72rem;
+          font-weight: 900;
+          letter-spacing: .08em;
+          text-transform: uppercase;
+        }
+        .cxr-led-stage-slide .mini-button {
+          min-height: 2.1rem;
+          padding: .35rem .72rem;
+          color: rgba(244,246,242,.84);
+        }
+        .cxr-led-stage-slide .asset-button,
+        .cxr-led-stage-slide .toggle-row {
+          display: flex;
+          align-items: center;
+          gap: .75rem;
+          width: 100%;
+          box-sizing: border-box;
+          margin-top: .75rem;
+          border: 1px solid rgba(83, 205, 189, .75);
+          border-radius: .45rem;
+          background: #252b33;
+          padding: .6rem;
+        }
+        .cxr-led-stage-slide .asset-thumb {
+          flex: 0 0 3.3rem;
+          width: 3.3rem;
+          height: 2.55rem;
+          border-radius: .25rem;
+          background: #080b0d;
+          overflow: hidden;
+        }
+        .cxr-led-stage-slide .asset-name {
+          color: #f4f6f2;
+          font-size: .82rem;
+          font-weight: 900;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .cxr-led-stage-slide label {
+          display: block;
+          margin-top: 1rem;
+          font-size: .82rem;
+        }
+        .cxr-led-stage-slide input[type="range"] {
+          width: 100%;
+          accent-color: #53cdbd;
+        }
+        .cxr-led-stage-slide .toggle-row {
+          border-color: rgba(255,255,255,.08);
+          color: rgba(244,246,242,.72);
+          font-size: .82rem;
+        }
+        .cxr-led-stage-slide .toggle-row span:first-child {
+          display: grid;
+          place-items: center;
+          width: 1rem;
+          height: 1rem;
+          border-radius: .18rem;
+          background: #53cdbd;
+          color: #11161b;
+          font-size: .74rem;
+          font-weight: 900;
+        }
+        @media (max-width: 900px) {
+          .cxr-led-stage-slide canvas {
+            inset: 0;
+            width: 100%;
+          }
+          .cxr-led-stage-slide .side-panel {
+            display: none;
+          }
+        }
+      </style>
+      <canvas></canvas>
+      <div class="view-actions">
+        <button type="button" data-view="back">Car</button>
+        <button type="button" data-view="left">Driver</button>
+        <button type="button" data-view="right">Passenger</button>
+        <button type="button" data-view="front" class="active">Front</button>
+      </div>
+      <aside class="side-panel">
+        <div class="panel-head">
+          <div>
+            <h1>LED Stage Preview</h1>
+            <p>360 equirectangular wall content around a car stage.</p>
+          </div>
+          <span class="pill">Video</span>
+        </div>
+        <div class="drop"><strong>Load 360 files</strong><span>Drop or select equirectangular images and videos.</span></div>
+        <div class="section-title"><span>Wall Content</span><button class="mini-button" type="button">Clear</button></div>
+        <div class="asset-button">
+          <div class="asset-thumb"></div>
+          <div>
+            <div class="asset-name">A001_0614BP_Stitched_NoTop...</div>
+            <div class="asset-meta">Local H.264 fallback texture</div>
+          </div>
+        </div>
+        <div class="section-title"><span>Stage</span></div>
+        <label>Wall arc <input type="range" min="120" max="360" value="335" disabled></label>
+        <label>LED brightness <input type="range" min="0" max="2" value="1.18" step=".01" disabled></label>
+        <label>Content rotation <input type="range" min="-180" max="180" value="-90" disabled></label>
+        <div class="section-title"><span>Car Model</span><button class="mini-button" type="button">Reset</button></div>
+        <div class="drop"><strong>Load GLB car</strong><span>RealisticCar05 black paint</span></div>
+        <div class="section-title"><span>Preview</span></div>
+        <div class="toggle-row"><span>✓</span><span>Stage grid</span></div>
+      </aside>
+    `
+    target.appendChild(root)
+
+    const cleanup = []
+    const media = createMediaTexture(slide, cleanup)
+    const canvas = root.querySelector('canvas')
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false })
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
+    renderer.outputEncoding = THREE.sRGBEncoding
+    renderer.toneMapping = THREE.ACESFilmicToneMapping
+    renderer.toneMappingExposure = 1.08
+    renderer.shadowMap.enabled = true
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap
+
+    const scene = new THREE.Scene()
+    scene.background = new THREE.Color(0x07080a)
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 180)
+    const targetPoint = new THREE.Vector3(0, 0.82, 0.05)
+    const projectionCenter = new THREE.Vector3()
+    const wallMaterial = makeLedProjectionMaterial(media.texture, projectionCenter)
+    const wallGroup = makeLedStageWall(wallMaterial)
+    scene.add(wallGroup)
+    scene.add(makeLedStageFloor())
+    scene.add(makeLedGrid())
+    scene.add(new THREE.HemisphereLight(0xbfd6ff, 0x101318, 0.6))
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2)
+    keyLight.position.set(4, 7, 6)
+    keyLight.castShadow = true
+    keyLight.shadow.mapSize.set(1024, 1024)
+    scene.add(keyLight)
+    const fillLight = new THREE.PointLight(0x53cdbd, 1.55, 18)
+    fillLight.position.set(-5, 3.2, 2)
+    scene.add(fillLight)
+    const rimLight = new THREE.SpotLight(0xffffff, 4, 12, Math.PI * 0.22, 0.45, 1.2)
+    rimLight.position.set(-3.8, 4.5, 3.8)
+    rimLight.target.position.set(0, 0.65, 0)
+    scene.add(rimLight)
+    scene.add(rimLight.target)
+
+    let yawOffset = 0
+    let pitchOffset = 0
+    let dragging = false
+    let lastX = 0
+    let lastY = 0
+    let raf = 0
+    const views = {
+      front: { position: [0, 1.55, 8.4], target: [0, 0.82, 0.05] },
+      left: { position: [-7.2, 1.45, 0.05], target: [0, 0.82, 0.05] },
+      right: { position: [7.2, 1.45, 0.05], target: [0, 0.82, 0.05] },
+      back: { position: [0, 1.55, -8.4], target: [0, 0.82, -0.05] }
+    }
+    let activeView = 'front'
+
+    function setCameraView (view) {
+      activeView = view
+      yawOffset = 0
+      pitchOffset = 0
+      const next = views[view]
+      camera.position.set(next.position[0], next.position[1], next.position[2])
+      targetPoint.set(next.target[0], next.target[1], next.target[2])
+      camera.lookAt(targetPoint)
+      Array.from(root.querySelectorAll('[data-view]')).forEach(function (button) {
+        button.classList.toggle('active', button.dataset.view === view)
+      })
+    }
+
+    Array.from(root.querySelectorAll('[data-view]')).forEach(function (button) {
+      button.addEventListener('click', function () { setCameraView(button.dataset.view) })
     })
-    const stage = new THREE.Group()
-    const wall = makeCurvedWall(ctx.texture)
-    stage.add(wall)
-    stage.add(makeStageFloor())
-    stage.add(makeCameraBox())
-    ctx.scene.add(stage)
-    ctx.scene.add(new THREE.AmbientLight(0xffffff, 1.35))
-    animate360(ctx, function () {
-      ctx.camera.position.set(0, 1.45, 6.2)
-      ctx.camera.lookAt(0, 0.25, 0)
-      stage.rotation.y = ctx.state.yaw * 0.28
+
+    function pointerDown (event) {
+      dragging = true
+      lastX = event.clientX
+      lastY = event.clientY
+      root.setPointerCapture(event.pointerId)
+    }
+    function pointerMove (event) {
+      if (!dragging) return
+      const dx = event.clientX - lastX
+      const dy = event.clientY - lastY
+      lastX = event.clientX
+      lastY = event.clientY
+      yawOffset -= dx * 0.005
+      pitchOffset = clamp(pitchOffset - dy * 0.004, -0.45, 0.45)
+    }
+    function pointerUp () {
+      dragging = false
+    }
+    root.addEventListener('pointerdown', pointerDown)
+    root.addEventListener('pointermove', pointerMove)
+    root.addEventListener('pointerup', pointerUp)
+    cleanup.push(function () {
+      root.removeEventListener('pointerdown', pointerDown)
+      root.removeEventListener('pointermove', pointerMove)
+      root.removeEventListener('pointerup', pointerUp)
+      wallMaterial.dispose()
     })
+
+    const carUrl = slide.car || './cinexr/RealisticCar05_HD_LOD0_black_parent_fixed.glb'
+    const carLoader = new GLTFLoader()
+    carLoader.load(carUrl, function (gltf) {
+      const car = normalizeLedCar(gltf.scene)
+      scene.add(car)
+      cleanup.push(function () { disposeLedObject(car) })
+    }, undefined, function () {
+      scene.add(makeFallbackLedCar())
+    })
+
+    function resize () {
+      const width = canvas.clientWidth || root.clientWidth
+      const height = canvas.clientHeight || root.clientHeight
+      renderer.setSize(width, height, false)
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+    }
+
+    function render () {
+      if (!root.isConnected) {
+        cleanup.forEach(function (fn) { fn() })
+        renderer.dispose()
+        return
+      }
+      resize()
+      const next = views[activeView]
+      const basePosition = new THREE.Vector3(next.position[0], next.position[1], next.position[2])
+      const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2])
+      const orbit = basePosition.clone().sub(baseTarget)
+      orbit.applyAxisAngle(new THREE.Vector3(0, 1, 0), yawOffset)
+      const side = new THREE.Vector3().crossVectors(orbit, new THREE.Vector3(0, 1, 0)).normalize()
+      orbit.applyAxisAngle(side, pitchOffset)
+      camera.position.copy(baseTarget).add(orbit)
+      camera.lookAt(baseTarget)
+      camera.getWorldPosition(projectionCenter)
+      renderer.render(scene, camera)
+      raf = window.requestAnimationFrame(render)
+    }
+
+    window.addEventListener('resize', resize)
+    cleanup.push(function () {
+      window.removeEventListener('resize', resize)
+      window.cancelAnimationFrame(raf)
+    })
+    setCameraView('front')
+    render()
   }
 }
 
@@ -435,6 +782,164 @@ function makeCameraBox () {
   group.add(body)
   group.add(lens)
   return group
+}
+
+function makeLedProjectionMaterial (texture, projectionCenter) {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      map: { value: texture },
+      brightness: { value: 1.18 },
+      rotation: { value: THREE.MathUtils.degToRad(-90) },
+      projectionCenter: { value: projectionCenter }
+    },
+    vertexShader: `
+      varying vec3 vWorldPosition;
+      void main() {
+        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPosition.xyz;
+        gl_Position = projectionMatrix * viewMatrix * worldPosition;
+      }
+    `,
+    fragmentShader: `
+      #define PI 3.1415926535897932384626433832795
+      uniform sampler2D map;
+      uniform float brightness;
+      uniform float rotation;
+      uniform vec3 projectionCenter;
+      varying vec3 vWorldPosition;
+      void main() {
+        vec3 direction = normalize(vWorldPosition - projectionCenter);
+        float longitude = atan(direction.z, direction.x) + rotation;
+        float latitude = asin(clamp(direction.y, -1.0, 1.0));
+        vec2 sphericalUv = vec2(fract(0.5 + longitude / (2.0 * PI)), 0.5 + latitude / PI);
+        vec4 texel = texture2D(map, sphericalUv);
+        gl_FragColor = vec4(texel.rgb * brightness, texel.a);
+      }
+    `,
+    side: THREE.BackSide,
+    toneMapped: false
+  })
+}
+
+function makeLedStageWall (material) {
+  const group = new THREE.Group()
+  const radius = 7.15
+  const height = 4.2
+  const arc = THREE.MathUtils.degToRad(335)
+  const openGap = Math.PI * 2 - arc
+  const start = Math.PI * 0.5 + openGap * 0.5
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 128, 1, true, start, arc), material)
+  wall.position.y = height / 2
+  group.add(wall)
+  const ceilingGeometry = new THREE.CircleGeometry(radius, 128)
+  ceilingGeometry.rotateX(-Math.PI / 2)
+  const ceiling = new THREE.Mesh(ceilingGeometry, material)
+  ceiling.position.y = height
+  group.add(ceiling)
+  return group
+}
+
+function makeLedStageFloor () {
+  const group = new THREE.Group()
+  const floor = new THREE.Mesh(
+    new THREE.CylinderGeometry(7.6, 7.9, 0.24, 96),
+    new THREE.MeshStandardMaterial({ color: 0x191d21, roughness: 0.72, metalness: 0.18 })
+  )
+  floor.position.y = -0.12
+  floor.receiveShadow = true
+  const turntable = new THREE.Mesh(
+    new THREE.CylinderGeometry(2.9, 2.95, 0.08, 96),
+    new THREE.MeshStandardMaterial({ color: 0x5d6366, roughness: 0.46, metalness: 0.12 })
+  )
+  turntable.position.y = 0.04
+  turntable.receiveShadow = true
+  group.add(floor)
+  group.add(turntable)
+  return group
+}
+
+function makeLedGrid () {
+  const grid = new THREE.GridHelper(15, 30, 0x4fc3b1, 0x2e343d)
+  grid.position.y = 0.09
+  return grid
+}
+
+function normalizeLedCar (model) {
+  const wrapper = new THREE.Group()
+  wrapper.add(model)
+  model.updateMatrixWorld(true)
+  const box = getRenderableBounds(model)
+  if (box.isEmpty()) return makeFallbackLedCar()
+  const size = box.getSize(new THREE.Vector3())
+  const longestSide = Math.max(size.x, size.y, size.z)
+  const scale = longestSide > 0 ? 4.25 / longestSide : 1
+  wrapper.scale.setScalar(scale)
+  wrapper.updateMatrixWorld(true)
+  const centeredBox = getRenderableBounds(wrapper)
+  const center = centeredBox.getCenter(new THREE.Vector3())
+  wrapper.position.x -= center.x
+  wrapper.position.z -= center.z
+  wrapper.updateMatrixWorld(true)
+  const scaledBox = getRenderableBounds(wrapper)
+  wrapper.position.y += 0.11 - scaledBox.min.y
+  wrapper.rotation.y = 0
+  wrapper.traverse(function (child) {
+    if (!child.isMesh) return
+    child.frustumCulled = false
+    child.castShadow = true
+    child.receiveShadow = true
+    const materials = Array.isArray(child.material) ? child.material : [child.material]
+    materials.forEach(function (material) {
+      material.side = THREE.DoubleSide
+      if ('roughness' in material) material.roughness = Math.min(material.roughness || 0.42, 0.36)
+      if ('metalness' in material) material.metalness = Math.max(material.metalness || 0.2, 0.35)
+      material.needsUpdate = true
+    })
+  })
+  return wrapper
+}
+
+function getRenderableBounds (object) {
+  const bounds = new THREE.Box3()
+  const meshBox = new THREE.Box3()
+  object.updateMatrixWorld(true)
+  object.traverse(function (child) {
+    if (!child.isMesh || !child.geometry) return
+    if (!child.geometry.boundingBox) child.geometry.computeBoundingBox()
+    meshBox.copy(child.geometry.boundingBox).applyMatrix4(child.matrixWorld)
+    bounds.union(meshBox)
+  })
+  return bounds
+}
+
+function makeFallbackLedCar () {
+  const group = new THREE.Group()
+  const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x20252a, roughness: 0.34, metalness: 0.55 })
+  const glassMaterial = new THREE.MeshStandardMaterial({ color: 0x0d151c, roughness: 0.12, metalness: 0.2 })
+  const body = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.42, 4.1), bodyMaterial)
+  body.position.y = 0.45
+  const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.48, 1.55), glassMaterial)
+  cabin.position.set(0, 0.88, -0.25)
+  group.add(body)
+  group.add(cabin)
+  group.position.y = 0.12
+  group.rotation.y = 0
+  return group
+}
+
+function disposeLedObject (object) {
+  object.traverse(function (child) {
+    if (!child.isMesh) return
+    if (child.geometry) child.geometry.dispose()
+    const materials = Array.isArray(child.material) ? child.material : [child.material]
+    materials.forEach(function (material) {
+      if (material) material.dispose()
+    })
+  })
+}
+
+function rotateStagePoint (point) {
+  return new THREE.Vector3(point[0], point[1], point[2]).applyAxisAngle(new THREE.Vector3(0, 1, 0), THREE.MathUtils.degToRad(-90))
 }
 
 function animate360 (ctx, update) {

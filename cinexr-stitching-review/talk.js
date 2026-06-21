@@ -445,6 +445,14 @@ function ledVolume360 (slide) {
     keyLight.castShadow = true
     keyLight.shadow.mapSize.set(1024, 1024)
     scene.add(keyLight)
+    const fillLight = new THREE.PointLight(0x53cdbd, 1.55, 18)
+    fillLight.position.set(-5, 3.2, 2)
+    scene.add(fillLight)
+    const rimLight = new THREE.SpotLight(0xffffff, 4, 12, Math.PI * 0.22, 0.45, 1.2)
+    rimLight.position.set(-3.8, 4.5, 3.8)
+    rimLight.target.position.set(0, 0.65, 0)
+    scene.add(rimLight)
+    scene.add(rimLight.target)
 
     let yawOffset = 0
     let pitchOffset = 0
@@ -714,13 +722,13 @@ function makeLedStageFloor () {
   const group = new THREE.Group()
   const floor = new THREE.Mesh(
     new THREE.CylinderGeometry(10.8, 11.2, 0.24, 128),
-    new THREE.MeshBasicMaterial({ color: 0x000000 })
+    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.86, metalness: 0.02 })
   )
   floor.position.y = -0.12
   floor.receiveShadow = true
   const turntable = new THREE.Mesh(
     new THREE.CylinderGeometry(3.45, 3.5, 0.08, 128),
-    new THREE.MeshBasicMaterial({ color: 0x000000 })
+    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.78, metalness: 0.02 })
   )
   turntable.position.y = 0.04
   turntable.receiveShadow = true

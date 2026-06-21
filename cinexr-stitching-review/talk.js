@@ -445,14 +445,6 @@ function ledVolume360 (slide) {
     keyLight.castShadow = true
     keyLight.shadow.mapSize.set(1024, 1024)
     scene.add(keyLight)
-    const fillLight = new THREE.PointLight(0x53cdbd, 1.55, 18)
-    fillLight.position.set(-5, 3.2, 2)
-    scene.add(fillLight)
-    const rimLight = new THREE.SpotLight(0xffffff, 4, 12, Math.PI * 0.22, 0.45, 1.2)
-    rimLight.position.set(-3.8, 4.5, 3.8)
-    rimLight.target.position.set(0, 0.65, 0)
-    scene.add(rimLight)
-    scene.add(rimLight.target)
 
     let yawOffset = 0
     let pitchOffset = 0
@@ -464,10 +456,10 @@ function ledVolume360 (slide) {
     let zoom = 1
     const panOffset = new THREE.Vector3()
     const views = {
-      front: { position: [0, 1.6, 8.8], target: [0, 0.82, 0.05] },
-      left: { position: [-8.4, 1.45, 0.05], target: [0, 0.82, 0.05] },
-      right: { position: [8.4, 1.45, 0.05], target: [0, 0.82, 0.05] },
-      back: { position: [0, 1.6, -8.8], target: [0, 0.82, -0.05] }
+      front: { position: [0, 1.34, 4.4], target: [0, 0.88, 0.1] },
+      left: { position: [-3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
+      right: { position: [3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
+      back: { position: [0, 1.34, -4.45], target: [0, 0.88, -0.05] }
     }
     let activeView = 'front'
 
@@ -530,7 +522,7 @@ function ledVolume360 (slide) {
     }
     function wheel (event) {
       event.preventDefault()
-      zoom = clamp(zoom * (event.deltaY > 0 ? 1.08 : 0.92), 0.48, 1.95)
+      zoom = clamp(zoom * (event.deltaY > 0 ? 1.08 : 0.92), 0.25, 2.25)
     }
     function contextMenu (event) {
       event.preventDefault()
@@ -722,13 +714,13 @@ function makeLedStageFloor () {
   const group = new THREE.Group()
   const floor = new THREE.Mesh(
     new THREE.CylinderGeometry(10.8, 11.2, 0.24, 128),
-    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.86, metalness: 0.02 })
+    new THREE.MeshBasicMaterial({ color: 0x000000 })
   )
   floor.position.y = -0.12
   floor.receiveShadow = true
   const turntable = new THREE.Mesh(
     new THREE.CylinderGeometry(3.45, 3.5, 0.08, 128),
-    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.78, metalness: 0.02 })
+    new THREE.MeshBasicMaterial({ color: 0x000000 })
   )
   turntable.position.y = 0.04
   turntable.receiveShadow = true

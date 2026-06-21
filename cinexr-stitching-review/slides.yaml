@@ -127,7 +127,7 @@ slides:
 
 - custom: mediaFrame
   image: ./cinexr/main-cameras.png
-  imageHeight: 90%
+  imageHeight: auto
   label: Recommended main plate
   filename: A001_0614BP_Sim-Plates_Stitched_NoTop_PR_11520x5760_AP1_cct.mov
   title: Main rig stitch without the top plate
@@ -137,8 +137,7 @@ slides:
 
 - custom: mediaFrame
   image: ./cinexr/main-plus-top-blend.png
-  imageScale: 1.45
-  imageOffsetY: -43vh
+  imageHeight: auto
   label: Alternate integrated stitch
   filename: A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct.mov
   title: Main rig plus top camera
@@ -148,6 +147,7 @@ slides:
 
 - custom: mediaFrame
   image: ./cinexr/top-flat-reflection.png
+  imageHeight: auto
   label: Recommended reflection source
   filename: A001_0614BP_Sim-Plates_Stitched_Top_Flat_PR_11520x5760_AP1_cct.mov
   title: Top camera as a flat, wide-FOV angle
@@ -157,6 +157,7 @@ slides:
 
 - custom: mediaFrame
   image: ./cinexr/top-unwrapped-360.png
+  imageHeight: auto
   label: Diagnostic top unwrap
   filename: A001_0614BP_Sim-Plates_Stitched_Top_Unwrapped_PR_11520x5760_AP1_cct.mov
   title: Top camera unwrapped in 360

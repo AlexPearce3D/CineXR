@@ -351,7 +351,12 @@ function hotspot360 (slide) {
 
 function ledVolume360 (slide) {
   return function renderLedVolume360 (target) {
-    const ctx = baseInteractiveSlide(slide, target, { cameraZ: 6.2, yaw: 0.3, pitch: -0.12, fov: 52 })
+    const ctx = baseInteractiveSlide(slide, target, {
+      cameraZ: slide.cameraZ || 6.2,
+      yaw: slide.yaw == null ? 0.3 : slide.yaw,
+      pitch: slide.pitch == null ? -0.12 : slide.pitch,
+      fov: slide.fov || 52
+    })
     const stage = new THREE.Group()
     const wall = makeCurvedWall(ctx.texture)
     stage.add(wall)

@@ -132,7 +132,7 @@ function baseInteractiveSlide (slide, target, opts) {
 
   root.querySelector('h1').textContent = slide.title || ''
   root.querySelector('.subtitle').textContent = slide.subtitle || ''
-  root.querySelector('.flat').src = slide.image
+  root.querySelector('.flat').src = slide.image || slide.video || ''
   target.appendChild(root)
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -144,10 +144,9 @@ function baseInteractiveSlide (slide, target, opts) {
   const camera = new THREE.PerspectiveCamera(opts.fov || 65, 1, 0.1, 1000)
   camera.position.set(0, 0, opts.cameraZ || 0.01)
 
-  const texture = new THREE.TextureLoader().load(slide.image)
-  texture.encoding = THREE.sRGBEncoding
-
   let cleanup = []
+  const media = createMediaTexture(slide, cleanup)
+  const texture = media.texture
   let state = {
     yaw: opts.yaw || 0,
     pitch: opts.pitch || 0,
@@ -201,7 +200,39 @@ function baseInteractiveSlide (slide, target, opts) {
   cleanup.push(function () { window.removeEventListener('resize', resize) })
   attachDrag()
 
-  return { root, scene, camera, renderer, texture, state, cleanup, resize }
+  return { root, scene, camera, renderer, texture, media, state, cleanup, resize }
+}
+
+function createMediaTexture (slide, cleanup) {
+  if (slide.video) {
+    const video = document.createElement('video')
+    video.src = slide.video
+    video.crossOrigin = 'anonymous'
+    video.loop = true
+    video.muted = true
+    video.playsInline = true
+    video.autoplay = true
+    video.preload = 'auto'
+    const texture = new THREE.VideoTexture(video)
+    texture.encoding = THREE.sRGBEncoding
+    const play = function () {
+      const promise = video.play()
+      if (promise && typeof promise.catch === 'function') promise.catch(function () {})
+    }
+    play()
+    cleanup.push(function () {
+      video.pause()
+      video.removeAttribute('src')
+      video.load()
+      texture.dispose()
+    })
+    return { texture, video }
+  }
+
+  const texture = new THREE.TextureLoader().load(slide.image)
+  texture.encoding = THREE.sRGBEncoding
+  cleanup.push(function () { texture.dispose() })
+  return { texture }
 }
 
 function panorama360 (slide) {

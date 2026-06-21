@@ -25,9 +25,9 @@ slides:
 
 - custom: panorama360
   title: Interactive 360 Viewer
-  subtitle: Click and drag to look around from inside the equirectangular plate.
+  subtitle: Low Resolution, 8bit preview.
   image: ./cinexr/equirect-360.jpg
-  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct_4kh264.mp4
+  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_NoTop_4k_h264.mp4
   yaw: -1.5708
   pitch: 0
 
@@ -146,6 +146,7 @@ slides:
 - custom: mediaFrame
   image: ./cinexr/main-plus-top-blend.png
   imageHeight: auto
+  imageAlignY: top
   label: Alternate integrated stitch
   filename: A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct.mov
   title: Main rig plus top camera
@@ -156,6 +157,9 @@ slides:
 - custom: mediaFrame
   image: ./cinexr/top-flat-reflection.png
   imageHeight: auto
+  imageScale: 0.5
+  imageAlignY: top
+  imageOffsetY: 12vh
   label: Recommended reflection source
   filename: A001_0614BP_Sim-Plates_Stitched_Top_Flat_PR_11520x5760_AP1_cct.mov
   title: Top camera as a flat, wide-FOV angle
@@ -166,6 +170,7 @@ slides:
 - custom: mediaFrame
   image: ./cinexr/top-unwrapped-360.png
   imageHeight: auto
+  imageAlignY: top
   label: Diagnostic top unwrap
   filename: A001_0614BP_Sim-Plates_Stitched_Top_Unwrapped_PR_11520x5760_AP1_cct.mov
   title: Top camera unwrapped in 360

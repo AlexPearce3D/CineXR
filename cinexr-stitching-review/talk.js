@@ -595,12 +595,13 @@ function mediaFrame (slide) {
           position: absolute;
           z-index: 1;
           left: 50%;
-          top: 50%;
+          top: var(--image-top);
           width: 100%;
           height: var(--image-height);
           object-fit: cover;
           object-position: var(--image-position);
-          transform: translate(-50%, calc(-50% + var(--image-offset-y))) scale(var(--image-scale));
+          transform: translate(-50%, var(--image-translate-y)) scale(var(--image-scale));
+          transform-origin: center var(--image-origin-y);
           background: #000;
         }
         .cxr-media-frame .copy {
@@ -655,10 +656,15 @@ function mediaFrame (slide) {
     `
 
     root.style.setProperty('--bg', `url("${slide.background || slide.image}")`)
+    const imageAlignY = slide.imageAlignY || 'center'
+    const alignTop = imageAlignY === 'top'
+    const alignBottom = imageAlignY === 'bottom'
     root.style.setProperty('--image-height', slide.imageHeight || '100%')
     root.style.setProperty('--image-position', slide.imagePosition || 'center center')
     root.style.setProperty('--image-scale', String(slide.imageScale == null ? 1 : slide.imageScale))
-    root.style.setProperty('--image-offset-y', slide.imageOffsetY || '0px')
+    root.style.setProperty('--image-top', alignTop ? '0' : alignBottom ? '100%' : '50%')
+    root.style.setProperty('--image-translate-y', alignTop ? (slide.imageOffsetY || '0px') : alignBottom ? `calc(-100% + ${slide.imageOffsetY || '0px'})` : `calc(-50% + ${slide.imageOffsetY || '0px'})`)
+    root.style.setProperty('--image-origin-y', alignTop ? 'top' : alignBottom ? 'bottom' : 'center')
     root.querySelector('img').src = slide.image
     root.querySelector('.label').textContent = slide.label || ''
     root.querySelector('h1').textContent = slide.title || ''

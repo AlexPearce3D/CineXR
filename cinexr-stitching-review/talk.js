@@ -458,10 +458,12 @@ function ledVolume360 (slide) {
     let yawOffset = 0
     let pitchOffset = 0
     let dragging = false
+    let dragButton = 0
     let lastX = 0
     let lastY = 0
     let raf = 0
     let zoom = 1
+    const panOffset = new THREE.Vector3()
     const views = {
       front: { position: [0, 1.6, 8.8], target: [0, 0.82, 0.05] },
       left: { position: [-8.4, 1.45, 0.05], target: [0, 0.82, 0.05] },
@@ -475,6 +477,7 @@ function ledVolume360 (slide) {
       yawOffset = 0
       pitchOffset = 0
       zoom = 1
+      panOffset.set(0, 0, 0)
       const next = views[view]
       camera.position.set(next.position[0], next.position[1], next.position[2])
       targetPoint.set(next.target[0], next.target[1], next.target[2])
@@ -494,6 +497,7 @@ function ledVolume360 (slide) {
 
     function pointerDown (event) {
       dragging = true
+      dragButton = event.button
       lastX = event.clientX
       lastY = event.clientY
       root.setPointerCapture(event.pointerId)
@@ -504,8 +508,23 @@ function ledVolume360 (slide) {
       const dy = event.clientY - lastY
       lastX = event.clientX
       lastY = event.clientY
-      yawOffset -= dx * 0.005
-      pitchOffset = clamp(pitchOffset + dy * 0.004, -0.45, 0.45)
+      if (dragButton === 2) {
+        const next = views[activeView]
+        const basePosition = new THREE.Vector3(next.position[0], next.position[1], next.position[2])
+        const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2])
+        const viewDirection = baseTarget.clone().sub(basePosition).normalize()
+        const right = new THREE.Vector3().crossVectors(viewDirection, new THREE.Vector3(0, 1, 0)).normalize()
+        const up = new THREE.Vector3(0, 1, 0)
+        const panScale = 0.0065 * zoom
+        panOffset.addScaledVector(right, -dx * panScale)
+        panOffset.addScaledVector(up, dy * panScale)
+        panOffset.x = clamp(panOffset.x, -2.2, 2.2)
+        panOffset.y = clamp(panOffset.y, -1.1, 1.6)
+        panOffset.z = clamp(panOffset.z, -2.2, 2.2)
+      } else {
+        yawOffset -= dx * 0.005
+        pitchOffset = clamp(pitchOffset + dy * 0.004, -0.45, 0.45)
+      }
     }
     function pointerUp () {
       dragging = false
@@ -514,17 +533,22 @@ function ledVolume360 (slide) {
       event.preventDefault()
       zoom = clamp(zoom * (event.deltaY > 0 ? 1.08 : 0.92), 0.48, 1.95)
     }
+    function contextMenu (event) {
+      event.preventDefault()
+    }
     root.addEventListener('pointerdown', pointerDown)
     root.addEventListener('pointermove', pointerMove)
     root.addEventListener('pointerup', pointerUp)
     root.addEventListener('pointercancel', pointerUp)
     root.addEventListener('wheel', wheel, { passive: false })
+    root.addEventListener('contextmenu', contextMenu)
     cleanup.push(function () {
       root.removeEventListener('pointerdown', pointerDown)
       root.removeEventListener('pointermove', pointerMove)
       root.removeEventListener('pointerup', pointerUp)
       root.removeEventListener('pointercancel', pointerUp)
       root.removeEventListener('wheel', wheel)
+      root.removeEventListener('contextmenu', contextMenu)
       wallMaterial.dispose()
     })
 
@@ -555,7 +579,7 @@ function ledVolume360 (slide) {
       resize()
       const next = views[activeView]
       const basePosition = new THREE.Vector3(next.position[0], next.position[1], next.position[2])
-      const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2])
+      const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2]).add(panOffset)
       const orbit = basePosition.clone().sub(baseTarget)
       orbit.multiplyScalar(zoom)
       orbit.applyAxisAngle(new THREE.Vector3(0, 1, 0), yawOffset)

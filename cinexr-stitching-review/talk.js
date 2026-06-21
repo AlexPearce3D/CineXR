@@ -403,7 +403,7 @@ function ledVolume360 (slide) {
           left: clamp(1rem, 2vw, 1.8rem);
           bottom: clamp(1rem, 2vw, 1.8rem);
           display: flex;
-          gap: .85rem;
+          gap: clamp(1.4rem, 2vw, 2.4rem);
           flex-wrap: wrap;
           color: rgba(244,246,242,.68);
           font-size: clamp(.68rem, .85vw, .86rem);
@@ -474,6 +474,14 @@ function ledVolume360 (slide) {
     rimLight.target.position.set(0, 0.65, 0)
     scene.add(rimLight)
     scene.add(rimLight.target)
+    const reflectionTarget = new THREE.WebGLCubeRenderTarget(256, {
+      generateMipmaps: true,
+      minFilter: THREE.LinearMipmapLinearFilter
+    })
+    reflectionTarget.texture.encoding = THREE.sRGBEncoding
+    const reflectionCamera = new THREE.CubeCamera(0.25, 80, reflectionTarget)
+    reflectionCamera.position.set(0, 0.95, 0)
+    scene.add(reflectionCamera)
 
     let yawOffset = 0
     let pitchOffset = 0
@@ -484,6 +492,8 @@ function ledVolume360 (slide) {
     let raf = 0
     let zoom = 1
     const panOffset = new THREE.Vector3()
+    let carObject = null
+    let reflectionFrame = 0
     const views = {
       front: { position: [0, 1.34, 4.4], target: [0, 0.88, 0.1] },
       left: { position: [-3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
@@ -566,12 +576,15 @@ function ledVolume360 (slide) {
       root.removeEventListener('wheel', wheel)
       root.removeEventListener('contextmenu', contextMenu)
       wallMaterial.dispose()
+      reflectionTarget.dispose()
     })
 
     const carUrl = slide.car || './cinexr/RealisticCar05_HD_LOD0_black_parent_fixed.glb'
     const carLoader = new GLTFLoader()
     carLoader.load(carUrl, function (gltf) {
       const car = normalizeLedCar(gltf.scene)
+      carObject = car
+      applyLedCarReflectionEnvironment(carObject, reflectionTarget.texture)
       scene.add(car)
       cleanup.push(function () { disposeLedObject(car) })
     }, undefined, function () {
@@ -604,6 +617,13 @@ function ledVolume360 (slide) {
       camera.position.copy(baseTarget).add(orbit)
       camera.lookAt(baseTarget)
       camera.getWorldPosition(projectionCenter)
+      if (carObject && reflectionFrame++ % 4 === 0) {
+        const wasVisible = carObject.visible
+        carObject.visible = false
+        reflectionCamera.position.set(0, 0.95, 0)
+        reflectionCamera.update(renderer, scene)
+        carObject.visible = wasVisible
+      }
       renderer.render(scene, camera)
       raf = window.requestAnimationFrame(render)
     }
@@ -687,7 +707,7 @@ function makeLedProjectionMaterial (texture, projectionCenter) {
   return new THREE.ShaderMaterial({
     uniforms: {
       map: { value: texture },
-      brightness: { value: 1.18 },
+      brightness: { value: 1 },
       rotation: { value: THREE.MathUtils.degToRad(-90) },
       projectionCenter: { value: projectionCenter }
     },
@@ -787,12 +807,62 @@ function normalizeLedCar (model) {
     const materials = Array.isArray(child.material) ? child.material : [child.material]
     materials.forEach(function (material) {
       material.side = THREE.DoubleSide
-      if ('roughness' in material) material.roughness = Math.min(material.roughness || 0.42, 0.36)
-      if ('metalness' in material) material.metalness = Math.max(material.metalness || 0.2, 0.35)
+      tuneLedCarReflectionMaterial(material, child)
       material.needsUpdate = true
     })
   })
   return wrapper
+}
+
+function applyLedCarReflectionEnvironment (car, envMap) {
+  car.traverse(function (child) {
+    if (!child.isMesh) return
+    const materials = Array.isArray(child.material) ? child.material : [child.material]
+    materials.forEach(function (material) {
+      if (!material) return
+      if ('envMap' in material) material.envMap = envMap
+      tuneLedCarReflectionMaterial(material, child)
+      material.needsUpdate = true
+    })
+  })
+}
+
+function tuneLedCarReflectionMaterial (material, mesh) {
+  if (!material) return
+  const label = ((material.name || '') + ' ' + (mesh.name || '')).toLowerCase()
+  const isBodyPaint = /body/.test(label)
+  const isGlass = /glass|window|windshield/.test(label)
+  const isRubber = /tire|tyre|rubber/.test(label)
+  const isInterior = /interior|seat|leather|dash|headrest/.test(label)
+  const isWheelOrGrill = /wheel|rim|grill|parts/.test(label)
+
+  if (isBodyPaint && 'color' in material) material.color.setRGB(0.003, 0.003, 0.003)
+  if (isBodyPaint && 'metalness' in material) material.metalness = 0
+
+  if ('envMapIntensity' in material) {
+    if (isRubber || isInterior) material.envMapIntensity = 0.18
+    else if (isBodyPaint) material.envMapIntensity = 1.15
+    else if (isGlass) material.envMapIntensity = 1.45
+    else if (isWheelOrGrill) material.envMapIntensity = 0.65
+    else material.envMapIntensity = 0.55
+  }
+
+  if ('roughness' in material) {
+    if (isRubber) material.roughness = Math.max(material.roughness || 0.78, 0.78)
+    else if (isInterior) material.roughness = Math.max(material.roughness || 0.62, 0.62)
+    else if (isBodyPaint) material.roughness = 0.34
+    else if (isGlass) material.roughness = 0.08
+    else if (isWheelOrGrill) material.roughness = Math.max(material.roughness || 0.42, 0.42)
+  }
+
+  if ('clearcoat' in material) {
+    if (isBodyPaint) material.clearcoat = 0.55
+    else if (!isGlass) material.clearcoat = Math.min(material.clearcoat || 0, 0.18)
+  }
+  if ('clearcoatRoughness' in material) {
+    if (isBodyPaint) material.clearcoatRoughness = 0.18
+    else if (!isGlass) material.clearcoatRoughness = Math.max(material.clearcoatRoughness || 0.35, 0.35)
+  }
 }
 
 function getRenderableBounds (object) {

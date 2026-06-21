@@ -410,10 +410,10 @@ function ledVolume360 (slide) {
       </style>
       <canvas></canvas>
       <div class="view-actions">
-        <button type="button" data-view="back">Car</button>
+        <button type="button" data-view="back" class="active">Back</button>
         <button type="button" data-view="left">Driver</button>
         <button type="button" data-view="right">Passenger</button>
-        <button type="button" data-view="front" class="active">Front</button>
+        <button type="button" data-view="front">Front</button>
       </div>
     `
     target.appendChild(root)
@@ -469,7 +469,7 @@ function ledVolume360 (slide) {
       right: { position: [3.7, 1.2, 0.28], target: [0, 0.86, 0.28] },
       back: { position: [0, 1.34, -4.45], target: [0, 0.88, -0.05] }
     }
-    let activeView = 'front'
+    let activeView = 'back'
 
     function setCameraView (view) {
       activeView = view
@@ -596,7 +596,7 @@ function ledVolume360 (slide) {
       window.removeEventListener('resize', resize)
       window.cancelAnimationFrame(raf)
     })
-    setCameraView('front')
+    setCameraView('back')
     render()
   }
 }

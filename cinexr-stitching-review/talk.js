@@ -369,8 +369,8 @@ function ledVolume360 (slide) {
         }
         .cxr-led-stage-slide canvas {
           position: absolute;
-          inset: 0 clamp(18rem, 22vw, 26.5rem) 0 0;
-          width: calc(100% - clamp(18rem, 22vw, 26.5rem));
+          inset: 0;
+          width: 100%;
           height: 100%;
           display: block;
         }
@@ -397,144 +397,14 @@ function ledVolume360 (slide) {
           border-color: rgba(83, 205, 189, .75);
           color: #70ddd2;
         }
-        .cxr-led-stage-slide .side-panel {
-          position: absolute;
-          z-index: 5;
-          inset: 0 0 0 auto;
-          width: clamp(18rem, 22vw, 26.5rem);
-          box-sizing: border-box;
-          padding: clamp(1.2rem, 2vw, 2rem);
-          background: #171a20;
-          border-left: 1px solid rgba(255,255,255,.08);
-          color: rgba(244,246,242,.7);
-        }
-        .cxr-led-stage-slide .panel-head {
-          display: flex;
-          align-items: start;
-          justify-content: space-between;
-          gap: 1rem;
-        }
-        .cxr-led-stage-slide h1 {
-          margin: 0;
-          color: #f4f6f2;
-          font-size: clamp(1.35rem, 1.6vw, 2rem);
-          line-height: 1.02;
-          letter-spacing: 0;
-        }
-        .cxr-led-stage-slide .panel-head p {
-          margin: .55rem 0 0;
-          max-width: 18rem;
-          font-size: clamp(.82rem, 1vw, 1.02rem);
-          line-height: 1.45;
-        }
-        .cxr-led-stage-slide .pill {
-          flex: 0 0 auto;
-          border-radius: 999px;
-          background: rgba(54, 201, 190, .14);
-          color: #70ddd2;
-          padding: .42rem .9rem;
-          font-size: .76rem;
-          font-weight: 900;
-        }
-        .cxr-led-stage-slide .drop {
-          margin-top: clamp(1.2rem, 2vw, 2rem);
-          border: 1px dashed rgba(183,196,211,.38);
-          border-radius: .5rem;
-          padding: 1.25rem;
-        }
-        .cxr-led-stage-slide .drop strong,
-        .cxr-led-stage-slide .group-title {
-          display: block;
-          color: #f4f6f2;
-          font-size: .9rem;
-          font-weight: 900;
-          letter-spacing: .02em;
-        }
-        .cxr-led-stage-slide .drop span,
-        .cxr-led-stage-slide .asset-meta {
-          display: block;
-          margin-top: .35rem;
-          font-size: .8rem;
-          line-height: 1.35;
-        }
-        .cxr-led-stage-slide .section-title {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: .8rem;
-          margin-top: clamp(1.25rem, 2vw, 1.9rem);
-          color: rgba(244,246,242,.62);
-          font-size: .72rem;
-          font-weight: 900;
-          letter-spacing: .08em;
-          text-transform: uppercase;
-        }
-        .cxr-led-stage-slide .mini-button {
-          min-height: 2.1rem;
-          padding: .35rem .72rem;
-          color: rgba(244,246,242,.84);
-        }
-        .cxr-led-stage-slide .asset-button,
-        .cxr-led-stage-slide .toggle-row {
-          display: flex;
-          align-items: center;
-          gap: .75rem;
-          width: 100%;
-          box-sizing: border-box;
-          margin-top: .75rem;
-          border: 1px solid rgba(83, 205, 189, .75);
-          border-radius: .45rem;
-          background: #252b33;
-          padding: .6rem;
-        }
-        .cxr-led-stage-slide .asset-thumb {
-          flex: 0 0 3.3rem;
-          width: 3.3rem;
-          height: 2.55rem;
-          border-radius: .25rem;
-          background: #080b0d;
-          overflow: hidden;
-        }
-        .cxr-led-stage-slide .asset-name {
-          color: #f4f6f2;
-          font-size: .82rem;
-          font-weight: 900;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .cxr-led-stage-slide label {
-          display: block;
-          margin-top: 1rem;
-          font-size: .82rem;
-        }
-        .cxr-led-stage-slide input[type="range"] {
-          width: 100%;
-          accent-color: #53cdbd;
-        }
-        .cxr-led-stage-slide .toggle-row {
-          border-color: rgba(255,255,255,.08);
-          color: rgba(244,246,242,.72);
-          font-size: .82rem;
-        }
-        .cxr-led-stage-slide .toggle-row span:first-child {
-          display: grid;
-          place-items: center;
-          width: 1rem;
-          height: 1rem;
-          border-radius: .18rem;
-          background: #53cdbd;
-          color: #11161b;
-          font-size: .74rem;
-          font-weight: 900;
-        }
         @media (max-width: 900px) {
-          .cxr-led-stage-slide canvas {
-            inset: 0;
-            width: 100%;
+          .cxr-led-stage-slide .view-actions {
+            gap: .4rem;
           }
-          .cxr-led-stage-slide .side-panel {
-            display: none;
+          .cxr-led-stage-slide button {
+            min-height: 2.35rem;
+            padding: .45rem .55rem;
+            font-size: .72rem;
           }
         }
       </style>
@@ -545,32 +415,6 @@ function ledVolume360 (slide) {
         <button type="button" data-view="right">Passenger</button>
         <button type="button" data-view="front" class="active">Front</button>
       </div>
-      <aside class="side-panel">
-        <div class="panel-head">
-          <div>
-            <h1>LED Stage Preview</h1>
-            <p>360 equirectangular wall content around a car stage.</p>
-          </div>
-          <span class="pill">Video</span>
-        </div>
-        <div class="drop"><strong>Load 360 files</strong><span>Drop or select equirectangular images and videos.</span></div>
-        <div class="section-title"><span>Wall Content</span><button class="mini-button" type="button">Clear</button></div>
-        <div class="asset-button">
-          <div class="asset-thumb"></div>
-          <div>
-            <div class="asset-name">A001_0614BP_Stitched_NoTop...</div>
-            <div class="asset-meta">Local H.264 fallback texture</div>
-          </div>
-        </div>
-        <div class="section-title"><span>Stage</span></div>
-        <label>Wall arc <input type="range" min="120" max="360" value="335" disabled></label>
-        <label>LED brightness <input type="range" min="0" max="2" value="1.18" step=".01" disabled></label>
-        <label>Content rotation <input type="range" min="-180" max="180" value="-90" disabled></label>
-        <div class="section-title"><span>Car Model</span><button class="mini-button" type="button">Reset</button></div>
-        <div class="drop"><strong>Load GLB car</strong><span>RealisticCar05 black paint</span></div>
-        <div class="section-title"><span>Preview</span></div>
-        <div class="toggle-row"><span>✓</span><span>Stage grid</span></div>
-      </aside>
     `
     target.appendChild(root)
 
@@ -617,11 +461,12 @@ function ledVolume360 (slide) {
     let lastX = 0
     let lastY = 0
     let raf = 0
+    let zoom = 1
     const views = {
-      front: { position: [0, 1.55, 8.4], target: [0, 0.82, 0.05] },
-      left: { position: [-7.2, 1.45, 0.05], target: [0, 0.82, 0.05] },
-      right: { position: [7.2, 1.45, 0.05], target: [0, 0.82, 0.05] },
-      back: { position: [0, 1.55, -8.4], target: [0, 0.82, -0.05] }
+      front: { position: [0, 1.6, 8.8], target: [0, 0.82, 0.05] },
+      left: { position: [-8.4, 1.45, 0.05], target: [0, 0.82, 0.05] },
+      right: { position: [8.4, 1.45, 0.05], target: [0, 0.82, 0.05] },
+      back: { position: [0, 1.6, -8.8], target: [0, 0.82, -0.05] }
     }
     let activeView = 'front'
 
@@ -629,6 +474,7 @@ function ledVolume360 (slide) {
       activeView = view
       yawOffset = 0
       pitchOffset = 0
+      zoom = 1
       const next = views[view]
       camera.position.set(next.position[0], next.position[1], next.position[2])
       targetPoint.set(next.target[0], next.target[1], next.target[2])
@@ -639,7 +485,11 @@ function ledVolume360 (slide) {
     }
 
     Array.from(root.querySelectorAll('[data-view]')).forEach(function (button) {
-      button.addEventListener('click', function () { setCameraView(button.dataset.view) })
+      button.addEventListener('pointerdown', function (event) { event.stopPropagation() })
+      button.addEventListener('click', function (event) {
+        event.stopPropagation()
+        setCameraView(button.dataset.view)
+      })
     })
 
     function pointerDown (event) {
@@ -655,18 +505,26 @@ function ledVolume360 (slide) {
       lastX = event.clientX
       lastY = event.clientY
       yawOffset -= dx * 0.005
-      pitchOffset = clamp(pitchOffset - dy * 0.004, -0.45, 0.45)
+      pitchOffset = clamp(pitchOffset + dy * 0.004, -0.45, 0.45)
     }
     function pointerUp () {
       dragging = false
     }
+    function wheel (event) {
+      event.preventDefault()
+      zoom = clamp(zoom * (event.deltaY > 0 ? 1.08 : 0.92), 0.48, 1.95)
+    }
     root.addEventListener('pointerdown', pointerDown)
     root.addEventListener('pointermove', pointerMove)
     root.addEventListener('pointerup', pointerUp)
+    root.addEventListener('pointercancel', pointerUp)
+    root.addEventListener('wheel', wheel, { passive: false })
     cleanup.push(function () {
       root.removeEventListener('pointerdown', pointerDown)
       root.removeEventListener('pointermove', pointerMove)
       root.removeEventListener('pointerup', pointerUp)
+      root.removeEventListener('pointercancel', pointerUp)
+      root.removeEventListener('wheel', wheel)
       wallMaterial.dispose()
     })
 
@@ -699,6 +557,7 @@ function ledVolume360 (slide) {
       const basePosition = new THREE.Vector3(next.position[0], next.position[1], next.position[2])
       const baseTarget = new THREE.Vector3(next.target[0], next.target[1], next.target[2])
       const orbit = basePosition.clone().sub(baseTarget)
+      orbit.multiplyScalar(zoom)
       orbit.applyAxisAngle(new THREE.Vector3(0, 1, 0), yawOffset)
       const side = new THREE.Vector3().crossVectors(orbit, new THREE.Vector3(0, 1, 0)).normalize()
       orbit.applyAxisAngle(side, pitchOffset)
@@ -823,12 +682,9 @@ function makeLedProjectionMaterial (texture, projectionCenter) {
 
 function makeLedStageWall (material) {
   const group = new THREE.Group()
-  const radius = 7.15
+  const radius = 8.6
   const height = 4.2
-  const arc = THREE.MathUtils.degToRad(335)
-  const openGap = Math.PI * 2 - arc
-  const start = Math.PI * 0.5 + openGap * 0.5
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 128, 1, true, start, arc), material)
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 160, 1, true, 0, Math.PI * 2), material)
   wall.position.y = height / 2
   group.add(wall)
   const ceilingGeometry = new THREE.CircleGeometry(radius, 128)
@@ -842,13 +698,13 @@ function makeLedStageWall (material) {
 function makeLedStageFloor () {
   const group = new THREE.Group()
   const floor = new THREE.Mesh(
-    new THREE.CylinderGeometry(7.6, 7.9, 0.24, 96),
+    new THREE.CylinderGeometry(10.8, 11.2, 0.24, 128),
     new THREE.MeshStandardMaterial({ color: 0x191d21, roughness: 0.72, metalness: 0.18 })
   )
   floor.position.y = -0.12
   floor.receiveShadow = true
   const turntable = new THREE.Mesh(
-    new THREE.CylinderGeometry(2.9, 2.95, 0.08, 96),
+    new THREE.CylinderGeometry(3.45, 3.5, 0.08, 128),
     new THREE.MeshStandardMaterial({ color: 0x5d6366, roughness: 0.46, metalness: 0.12 })
   )
   turntable.position.y = 0.04
@@ -859,7 +715,7 @@ function makeLedStageFloor () {
 }
 
 function makeLedGrid () {
-  const grid = new THREE.GridHelper(15, 30, 0x4fc3b1, 0x2e343d)
+  const grid = new THREE.GridHelper(22, 44, 0x4fc3b1, 0x2e343d)
   grid.position.y = 0.09
   return grid
 }

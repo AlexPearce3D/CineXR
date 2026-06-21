@@ -148,9 +148,13 @@ function baseInteractiveSlide (slide, target, opts) {
   let cleanup = []
   const media = createMediaTexture(slide, cleanup)
   const texture = media.texture
+  const pitchMin = opts.pitchMin == null ? -1.25 : opts.pitchMin
+  const pitchMax = opts.pitchMax == null ? 1.25 : opts.pitchMax
   let state = {
     yaw: opts.yaw || 0,
-    pitch: opts.pitch || 0,
+    pitch: clamp(opts.pitch == null ? 0 : opts.pitch, pitchMin, pitchMax),
+    pitchMin: pitchMin,
+    pitchMax: pitchMax,
     distance: opts.distance || 3.2,
     mode: opts.mode || 'pano',
     dragging: false,
@@ -181,7 +185,7 @@ function baseInteractiveSlide (slide, target, opts) {
       state.lastX = event.clientX
       state.lastY = event.clientY
       state.yaw -= dx * 0.005
-      state.pitch = clamp(state.pitch + dy * 0.004, -1.25, 1.25)
+      state.pitch = clamp(state.pitch + dy * 0.004, state.pitchMin, state.pitchMax)
     }
     function up () {
       state.dragging = false
@@ -242,7 +246,9 @@ function panorama360 (slide) {
       mode: 'pano',
       fov: 72,
       yaw: slide.yaw == null ? 0 : slide.yaw,
-      pitch: slide.pitch == null ? 0 : slide.pitch
+      pitch: slide.pitch == null ? 0 : slide.pitch,
+      pitchMin: slide.pitchMin == null ? 0 : slide.pitchMin,
+      pitchMax: slide.pitchMax == null ? 1.25 : slide.pitchMax
     })
     const sphere = makePanoramaSphere(ctx.texture)
     ctx.scene.add(sphere)

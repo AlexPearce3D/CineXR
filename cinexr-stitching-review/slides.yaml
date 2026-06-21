@@ -26,9 +26,9 @@ slides:
 
 - custom: panorama360
   title: Interactive 360 Viewer
-  subtitle: Low Resolution, 8bit preview.
+  subtitle: Vimeo H.264 preview.
   image: ./cinexr/equirect-360.jpg
-  video: ./cinexr/A001_0614BP_Sim-Plates_Stitched_NoTop_4k_h264.mp4
+  video: ./cinexr/SIM_A001_0614BP_Stitched_1440p_vimeo_h264.mp4
   yaw: -1.5708
   pitch: 0
 

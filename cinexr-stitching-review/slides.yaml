@@ -164,6 +164,11 @@ slides:
   background: ./cinexr/top-unwrapped-360.png
   brightness: 0.42
 
+- custom: panorama360
+  title: Interactive 360 Viewer
+  subtitle: Click and drag to look around from inside the equirectangular plate.
+  image: ./cinexr/equirect-360.jpg
+
 - custom: mediaFrame
   image: ./cinexr/title-led-stage.png
   label: Contact
@@ -172,34 +177,3 @@ slides:
   subtitle: 
   background: ./cinexr/title-led-stage.png
   brightness: 0.35
-
-- custom: panorama360
-  title: Interactive 360 Viewer
-  subtitle: Click and drag to look around from inside the equirectangular plate.
-  image: ./cinexr/equirect-360.jpg
-
-- custom: globe360
-  title: Mini Globe Preview
-  subtitle: Rotate the equirectangular plate as a small textured globe.
-  image: ./cinexr/equirect-360.jpg
-
-- custom: globe360
-  title: GLB-Style Asset Inspection
-  subtitle: "Same idea as a textured .glb sphere: useful for reviewing the full 360 asset as an object."
-  image: ./cinexr/equirect-360.jpg
-  wireframe: true
-
-- custom: dual360
-  title: "Dual Mode: Inside / Globe / Flat"
-  subtitle: Toggle between practical 360 playback, object inspection, and the source equirectangular frame.
-  image: ./cinexr/equirect-360.jpg
-
-- custom: hotspot360
-  title: Hotspot Review
-  subtitle: Click and drag to inspect the plate. Markers call out useful review areas.
-  image: ./cinexr/equirect-360.jpg
-
-- custom: ledVolume360
-  title: LED Volume Mockup
-  subtitle: The 360 plate can be previewed as curved wall content around a simple stage/camera setup.
-  image: ./cinexr/equirect-360.jpg

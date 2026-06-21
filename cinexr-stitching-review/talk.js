@@ -723,13 +723,13 @@ function makeLedStageFloor () {
   const group = new THREE.Group()
   const floor = new THREE.Mesh(
     new THREE.CylinderGeometry(10.8, 11.2, 0.24, 128),
-    new THREE.MeshStandardMaterial({ color: 0x15181c, roughness: 0.78, metalness: 0.1 })
+    new THREE.MeshStandardMaterial({ color: 0x050607, roughness: 0.82, metalness: 0.05 })
   )
   floor.position.y = -0.12
   floor.receiveShadow = true
   const turntable = new THREE.Mesh(
     new THREE.CylinderGeometry(3.45, 3.5, 0.08, 128),
-    new THREE.MeshStandardMaterial({ color: 0x252a2f, roughness: 0.62, metalness: 0.08 })
+    new THREE.MeshStandardMaterial({ color: 0x0b0d0f, roughness: 0.72, metalness: 0.04 })
   )
   turntable.position.y = 0.04
   turntable.receiveShadow = true

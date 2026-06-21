@@ -181,7 +181,7 @@ function baseInteractiveSlide (slide, target, opts) {
       state.lastX = event.clientX
       state.lastY = event.clientY
       state.yaw -= dx * 0.005
-      state.pitch = clamp(state.pitch - dy * 0.004, -1.25, 1.25)
+      state.pitch = clamp(state.pitch + dy * 0.004, -1.25, 1.25)
     }
     function up () {
       state.dragging = false

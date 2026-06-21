@@ -19,6 +19,7 @@ slides:
   brightness: 0
   footerName: Alex Pearce
   footerDate: June 2026
+  navHint: Press right arrow for next slide
   titleStyle:
     transform: translateY(-35vh)
     textAlign: center

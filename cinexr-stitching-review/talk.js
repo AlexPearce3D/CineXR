@@ -1010,9 +1010,22 @@ function titleWithFooter (slide) {
         .cxr-title-with-footer .separator {
           color: rgba(246,244,238,.62);
         }
+        .cxr-title-with-footer .nav-hint {
+          position: absolute;
+          z-index: 1;
+          right: clamp(1.6rem, 4vw, 4rem);
+          bottom: clamp(1.2rem, 4vh, 2.8rem);
+          color: rgba(246,244,238,.72);
+          font-size: clamp(.78rem, 1vw, .95rem);
+          font-weight: 900;
+          letter-spacing: .08em;
+          text-transform: uppercase;
+          text-shadow: 0 2px 10px rgba(0,0,0,.72);
+        }
       </style>
       <h1 class="title"></h1>
       <div class="footer"><span class="name"></span><span class="separator">|</span><span class="date"></span></div>
+      <div class="nav-hint"></div>
     `
 
     root.style.setProperty('--bg', `url("${slide.background}")`)
@@ -1022,6 +1035,9 @@ function titleWithFooter (slide) {
     root.querySelector('.name').textContent = parsedFooter.name
     root.querySelector('.date').textContent = parsedFooter.date
     root.querySelector('.separator').style.display = parsedFooter.date ? '' : 'none'
+    const navHint = root.querySelector('.nav-hint')
+    navHint.textContent = slide.navHint || ''
+    navHint.style.display = slide.navHint ? '' : 'none'
     target.appendChild(root)
   }
 }

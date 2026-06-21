@@ -1015,17 +1015,60 @@ function titleWithFooter (slide) {
           z-index: 1;
           right: clamp(1.6rem, 4vw, 4rem);
           bottom: clamp(1.2rem, 4vh, 2.8rem);
-          color: rgba(246,244,238,.72);
-          font-size: clamp(.78rem, 1vw, .95rem);
-          font-weight: 900;
-          letter-spacing: .08em;
+          display: flex;
+          align-items: center;
+          gap: clamp(.9rem, 1.3vw, 1.35rem);
+          box-sizing: border-box;
+          min-height: clamp(3.1rem, 5vw, 4.6rem);
+          padding: clamp(.55rem, .9vw, .8rem) clamp(.8rem, 1.35vw, 1.35rem);
+          border: 1px solid rgba(246,244,238,.34);
+          border-radius: clamp(.85rem, 1.4vw, 1.25rem);
+          background: rgba(0,0,0,.42);
+          box-shadow:
+            inset 0 0 0 1px rgba(246,244,238,.08),
+            0 .55rem 1.4rem rgba(0,0,0,.36);
+          color: rgba(246,244,238,.84);
+        }
+        .cxr-title-with-footer .nav-key {
+          display: grid;
+          place-items: center;
+          width: clamp(2.45rem, 4vw, 3.55rem);
+          aspect-ratio: 1.35;
+          border: 1px solid rgba(246,244,238,.52);
+          border-radius: clamp(.45rem, .8vw, .7rem);
+          background: rgba(246,244,238,.08);
+          font-size: clamp(1.65rem, 2.8vw, 2.55rem);
+          line-height: 1;
+          box-shadow: inset 0 0 .45rem rgba(246,244,238,.1);
+        }
+        .cxr-title-with-footer .nav-divider {
+          width: 1px;
+          height: clamp(2.35rem, 3.8vw, 3.35rem);
+          background: rgba(246,244,238,.42);
+        }
+        .cxr-title-with-footer .nav-copy {
+          display: grid;
+          gap: .18rem;
+          font-size: clamp(.72rem, 1.1vw, 1rem);
+          font-weight: 800;
+          letter-spacing: .18em;
+          line-height: 1.15;
           text-transform: uppercase;
-          text-shadow: 0 2px 10px rgba(0,0,0,.72);
+          white-space: nowrap;
+        }
+        .cxr-title-with-footer .nav-copy strong {
+          color: #f6f4ee;
+          font-weight: 950;
+          letter-spacing: .2em;
         }
       </style>
       <h1 class="title"></h1>
       <div class="footer"><span class="name"></span><span class="separator">|</span><span class="date"></span></div>
-      <div class="nav-hint"></div>
+      <div class="nav-hint">
+        <span class="nav-key">→</span>
+        <span class="nav-divider"></span>
+        <span class="nav-copy"><span>Press right arrow</span><span>For <strong>next slide</strong></span></span>
+      </div>
     `
 
     root.style.setProperty('--bg', `url("${slide.background}")`)
@@ -1036,7 +1079,6 @@ function titleWithFooter (slide) {
     root.querySelector('.date').textContent = parsedFooter.date
     root.querySelector('.separator').style.display = parsedFooter.date ? '' : 'none'
     const navHint = root.querySelector('.nav-hint')
-    navHint.textContent = slide.navHint || ''
     navHint.style.display = slide.navHint ? '' : 'none'
     target.appendChild(root)
   }

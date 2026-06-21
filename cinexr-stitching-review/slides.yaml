@@ -1,0 +1,205 @@
+title: CineXR Stitching Test Review
+style:
+  fontFamily: Inter, system-ui, sans-serif
+  background: '#05070a'
+  color: '#f6f4ee'
+  --accent: '#f3b35b'
+  --cool: '#7bd6ff'
+remote: false
+slides:
+
+- custom: titleWithFooter
+  title: CineXR Stitching Test Review
+  eyebrow: 
+  subtitle: 
+  align: Top
+  background: /cinexr/title-main-stitch.png
+  backgroundSize: cover
+  backgroundPosition: center
+  brightness: 0
+  footerName: Alex Pearce
+  footerDate: June 2026
+  titleStyle:
+    transform: translateY(-35vh)
+    textAlign: center
+
+- html: |
+    <section class="cxr-source-grid">
+      <style>
+        .cxr-source-grid {
+          box-sizing: border-box;
+          width: 100vw;
+          height: 100vh;
+          padding: clamp(1.3rem, 3vw, 3rem);
+          display: grid;
+          grid-template-rows: auto 1fr;
+          gap: clamp(1rem, 2vw, 1.8rem);
+          background:
+            linear-gradient(180deg, rgba(5,7,10,.82), rgba(5,7,10,.96)),
+            url("/cinexr/main-plus-top-blend.png") center / cover no-repeat;
+          color: #f6f4ee;
+          font-family: Inter, system-ui, sans-serif;
+        }
+        .cxr-source-grid header {
+          display: flex;
+          justify-content: space-between;
+          align-items: end;
+          gap: 3rem;
+        }
+        .cxr-source-grid h1 {
+          margin: 0;
+          max-width: 13ch;
+          font-size: clamp(3rem, 7vw, 6.6rem);
+          line-height: .88;
+          letter-spacing: 0;
+        }
+        .cxr-source-grid .tag {
+          margin: 0 0 .4rem;
+          color: var(--accent);
+          font-weight: 900;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+        }
+        .cxr-source-grid .grid {
+          min-height: 0;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: clamp(.75rem, 1.5vw, 1.2rem);
+        }
+        .cxr-source-grid figure {
+          position: relative;
+          min-width: 0;
+          min-height: 0;
+          margin: 0;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,.14);
+          background: #000;
+        }
+        .cxr-source-grid img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .cxr-source-grid figcaption {
+          position: absolute;
+          left: .8rem;
+          bottom: .8rem;
+          max-width: calc(100% - 1.6rem);
+          padding: .55rem .7rem;
+          background: rgba(5,7,10,.78);
+          color: #f6f4ee;
+          font-size: clamp(.78rem, 1.25vw, 1.05rem);
+          font-weight: 800;
+        }
+        .cxr-source-grid figcaption span {
+          display: block;
+          margin-top: .3rem;
+          color: rgba(246,244,238,.64);
+          font: 800 clamp(.54rem, .72vw, .68rem) ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+          overflow-wrap: anywhere;
+        }
+      </style>
+      <header>
+        <div>
+          <p class="tag">Four exports</p>
+          <h1>4 Different Files.</h1>
+        </div>
+      </header>
+      <div class="grid">
+        <figure><img src="/cinexr/main-cameras.png" alt=""><figcaption>Main rig stitch, no top plate<br><span>A001_0614BP_Sim-Plates_Stitched_NoTop_PR_11520x5760_AP1_cct.mov</span></figcaption></figure>
+        <figure><img src="/cinexr/main-plus-top-blend.png" alt=""><figcaption>Main rig + top camera stitch<br><span>A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct.mov</span></figcaption></figure>
+        <figure><img src="/cinexr/top-flat-reflection.png" alt=""><figcaption>Top camera flat, wide-FOV reflection source<br><span>A001_0614BP_Sim-Plates_Stitched_Top_Flat_PR_11520x5760_AP1_cct.mov</span></figcaption></figure>
+        <figure><img src="/cinexr/top-unwrapped-360.png" alt=""><figcaption>Top camera unwrapped in 360<br><span>A001_0614BP_Sim-Plates_Stitched_Top_Unwrapped_PR_11520x5760_AP1_cct.mov</span></figcaption></figure>
+      </div>
+    </section>
+
+- custom: stitchCompare
+  eyebrow: 
+  title: With or without the sky.
+  subtitle: Drag or move across the frame to compare the clean no-top stitch with the integrated top-camera stitch.
+  before: /cinexr/main-cameras.png
+  after: /cinexr/main-plus-top-blend.png
+  beforeLabel: No-top main stitch
+  beforeFile: A001_0614BP_Sim-Plates_Stitched_NoTop_PR_11520x5760_AP1_cct.mov
+  afterLabel: Integrated top-camera stitch
+  afterFile: A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct.mov
+
+- custom: mediaFrame
+  image: /cinexr/main-cameras.png
+  imageHeight: 90%
+  label: Recommended main plate
+  filename: A001_0614BP_Sim-Plates_Stitched_NoTop_PR_11520x5760_AP1_cct.mov
+  title: Main rig stitch without the top plate
+  subtitle: Cleanest looking deliverable since we don't have to incorporate the sky plate.
+  background: /cinexr/main-cameras.png
+  brightness: 0.35
+
+- custom: mediaFrame
+  image: /cinexr/main-plus-top-blend.png
+  imageScale: 1.45
+  imageOffsetY: -43vh
+  label: Alternate integrated stitch
+  filename: A001_0614BP_Sim-Plates_Stitched_PR_11520x5760_AP1_cct.mov
+  title: Main rig plus top camera
+  subtitle: This works, but will not stitch seamlessly.
+  background: /cinexr/main-plus-top-blend.png
+  brightness: 0.38
+
+- custom: mediaFrame
+  image: /cinexr/top-flat-reflection.png
+  label: Recommended reflection source
+  filename: A001_0614BP_Sim-Plates_Stitched_Top_Flat_PR_11520x5760_AP1_cct.mov
+  title: Top camera as a flat, wide-FOV angle
+  subtitle: "Best use of the top plate: a flexible reflection/ceiling source the stage can reposition as needed."
+  background: /cinexr/top-flat-reflection.png
+  brightness: 0.45
+
+- custom: mediaFrame
+  image: /cinexr/top-unwrapped-360.png
+  label: Diagnostic top unwrap
+  filename: A001_0614BP_Sim-Plates_Stitched_Top_Unwrapped_PR_11520x5760_AP1_cct.mov
+  title: Top camera unwrapped in 360
+  subtitle: Some stages might prefer this, but probably not recommended. We are providing it for you to see what the top looks like just upwrapped.
+  background: /cinexr/top-unwrapped-360.png
+  brightness: 0.42
+
+- custom: mediaFrame
+  image: /cinexr/title-led-stage.png
+  label: Contact
+  filename: alex@sim-plates.com
+  title: alex@sim-plates.com
+  subtitle: 
+  background: /cinexr/title-led-stage.png
+  brightness: 0.35
+
+- custom: panorama360
+  title: Interactive 360 Viewer
+  subtitle: Click and drag to look around from inside the equirectangular plate.
+  image: /cinexr/equirect-360.jpg
+
+- custom: globe360
+  title: Mini Globe Preview
+  subtitle: Rotate the equirectangular plate as a small textured globe.
+  image: /cinexr/equirect-360.jpg
+
+- custom: globe360
+  title: GLB-Style Asset Inspection
+  subtitle: "Same idea as a textured .glb sphere: useful for reviewing the full 360 asset as an object."
+  image: /cinexr/equirect-360.jpg
+  wireframe: true
+
+- custom: dual360
+  title: "Dual Mode: Inside / Globe / Flat"
+  subtitle: Toggle between practical 360 playback, object inspection, and the source equirectangular frame.
+  image: /cinexr/equirect-360.jpg
+
+- custom: hotspot360
+  title: Hotspot Review
+  subtitle: Click and drag to inspect the plate. Markers call out useful review areas.
+  image: /cinexr/equirect-360.jpg
+
+- custom: ledVolume360
+  title: LED Volume Mockup
+  subtitle: The 360 plate can be previewed as curved wall content around a simple stage/camera setup.
+  image: /cinexr/equirect-360.jpg

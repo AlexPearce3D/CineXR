@@ -1,0 +1,17 @@
+{
+  "name": "cinexr-stitching-review",
+  "private": true,
+  "scripts": {
+    "dev": "powerslides dev .",
+    "build": "powerslides build .",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.0",
+    "pngjs": "^7.0.0",
+    "power-slides": "^3.0.1"
+  },
+  "dependencies": {
+    "three": "^0.124.0"
+  }
+}

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "powerslides dev .",
-    "build": "powerslides build .",
+    "build": "powerslides build . && node scripts/inject-preload-hints.js",
     "start": "npm run dev"
   },
   "devDependencies": {
